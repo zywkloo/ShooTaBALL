@@ -12,6 +12,7 @@ import UIKit
 class DrawView: UIView {
     var currentLine: Line?
     var currentCircle: Circle = Circle()
+    var ballCircle: Circle = Circle();
     var finishedCircle = [Circle]()
     var finishedLines = [Line]()
     var initialized = false //variables not yet initialized
@@ -36,7 +37,6 @@ class DrawView: UIView {
         count = (count + 1) % 1000 //one event per 100 msec
         if count != 0 {return}
         currentCircle.radius += CGFloat(1.0)
-        
         setNeedsDisplay();
     }
     
@@ -52,7 +52,6 @@ class DrawView: UIView {
     
     @IBInspectable var finishedLineColor: UIColor = UIColor.blue {
         didSet {
-            //finishedLineColor = UIColor.green;
             setNeedsDisplay()
         }
     }
@@ -69,11 +68,11 @@ class DrawView: UIView {
     }
     @IBInspectable var currentCircleColor: UIColor = UIColor.purple {
         didSet {
-            //currentLineColor = UIColor(red: CGFloat.random(min: CGFloat(0.01), max: CGFloat(0.99)), green: 0.5, blue: CGFloat.random(in: 0..<1), alpha: 0.3);
+            finishedCircleColor = UIColor(red: CGFloat.random(min: CGFloat(0.01), max: CGFloat(0.99)), green: 0.5, blue: CGFloat.random(in: 0..<1), alpha: 0.7);
             setNeedsDisplay()
         }
     }
-    @IBInspectable var lineThickness: CGFloat = CGFloat.random(in: 5..<20) {
+    @IBInspectable var lineThickness: CGFloat = CGFloat.random(in: 10..<15) {
         didSet {
             setNeedsDisplay()
         }
@@ -91,6 +90,7 @@ class DrawView: UIView {
                                                width: circle.radius*2,
                                                height: circle.radius*2))
         path.lineWidth = 10;
+        finishedCircleColor.setFill()
         path.fill()
         path.stroke(); //actually draw the path
     }
@@ -112,7 +112,7 @@ class DrawView: UIView {
         //rect.width and rect.height
         currentCircle = Circle(centre: CGPoint(x:screenSize.width/2,y:screenSize.height/2), radius: CGFloat(screenSize.width/9))
         paraStyle.lineSpacing = CGFloat(6.0)
-
+        ballCircle = Circle(centre: CGPoint(x:50,y:100), radius:CGFloat(20.0))
         initialized = true
     }
     
@@ -129,20 +129,20 @@ class DrawView: UIView {
         //couple of lines and circles for debug
         let line1 = Line(begin: CGPoint(x:50,y:50), end: CGPoint(x:100,y:100));
         let line2 = Line(begin: CGPoint(x:50,y:100), end: CGPoint(x:100,y:300));
-        let circle1 = Circle(centre: CGPoint(x:50,y:100), radius:CGFloat(20.0));
+        
         strokeLine(line: line1);
         strokeLine(line: line2);
-        strokeCircle(circle: circle1);
+        strokeCircle(circle: ballCircle);
         //draw current line if it exists
         if let line = currentLine {
-            currentLineColor.setStroke(); //current line in red
+            currentLineColor.setStroke(); //current line in 
             strokeLine(line: line);
         }
 
         if currentCircle.radius > CGFloat(screenSize.width/4) {
             currentCircle.radius = CGFloat(10)
         }
-        currentCircleColor.setStroke(); //current line in red
+        currentCircleColor.setStroke(); //current line in
         strokeCircle(circle: currentCircle)
 
         let attributes: NSDictionary = [
@@ -160,6 +160,14 @@ class DrawView: UIView {
         print(#function) //for debugging
         let touch = touches.first!; //get first touch event and unwrap optional
         let location = touch.location(in: self); //get location in view co-ordinate
+        if currentCircle.containsPoint(point: location) {
+            print("You hit the currrent circle.")
+            currentCircleColor = UIColor.blue
+        }
+        if ballCircle.containsPoint(point: location) {
+            print("You hit the ball circle.")
+            currentCircleColor = UIColor.green
+        }
         currentLine = Line(begin: location, end: location);
         setNeedsDisplay(); //this view needs to be updated
     }
@@ -169,6 +177,18 @@ class DrawView: UIView {
         let touch = touches.first!; //get first touch event and unwrap optional
         let location = touch.location(in: self); //get location in view co-ordinate
         currentLine?.end = location;
+        guard let line = currentLine else{
+            return
+        }
+        
+        if  currentCircle.containsPoint(point: location)  {
+            currentCircle.centre.x = location.x - line.begin.x
+            currentCircle.centre.y = location.y - line.begin.y 
+        }
+        if  ballCircle.containsPoint(point: location)  {
+            ballCircle.centre.x = line.begin.x + location.x
+            ballCircle.centre.y = line.begin.y + location.y
+        }
         setNeedsDisplay(); //this view needs to be updated
     }
     
@@ -176,6 +196,7 @@ class DrawView: UIView {
         print(#function) //for debugging
         let touch = touches.first!; //get first touch event and unwrap optional
         let location = touch.location(in: self); //get location in view co-ordinate
+        //currentCircleColor = UIColor.purple
         currentLine?.end = location;
         strokeLine(line: currentLine!);
         finishedLines.append(currentLine!);
