@@ -11,14 +11,44 @@ import UIKit
 
 class DrawView: UIView {
     var currentLine: Line?
-    var currentCircle: Circle?
+    var currentCircle: Circle = Circle()
     var finishedCircle = [Circle]()
     var finishedLines = [Line]()
     var initialized = false //variables not yet initialized
     var timer :Timer!
     var timerIsRunning = false
     let screenSize: CGRect = UIScreen.main.bounds
-    let s: NSString = "Ball Location:"
+    
+    var s: NSString = NSString()
+    // set the text color to dark gray
+    let fieldColor: UIColor = UIColor.darkGray
+    // set the font to Helvetica Neue 18
+    let fieldFont = UIFont(name: "Helvetica Neue", size: 18)
+    // set the line spacing to 6
+    let paraStyle = NSMutableParagraphStyle()
+
+    // set the Obliqueness to 0.1
+    let skew = 0.2
+
+    
+    var count = 0
+    @objc func updateTimer(){
+        count = (count + 1) % 1000 //one event per 100 msec
+        if count != 0 {return}
+        currentCircle.radius += CGFloat(1.0)
+        
+        setNeedsDisplay();
+    }
+    
+    func runTimer() {
+        if timerIsRunning {return}
+        timer = Timer.scheduledTimer(timeInterval: -0.5, //means 0.1 msec interval
+            target: self,
+            selector: (#selector(DrawView.updateTimer)),
+            userInfo: nil,
+            repeats: true)
+        timerIsRunning = true
+    }
     
     @IBInspectable var finishedLineColor: UIColor = UIColor.blue {
         didSet {
@@ -80,31 +110,16 @@ class DrawView: UIView {
     func initialize(rect: CGRect){
         //Initialize variables based on dimensions
         //rect.width and rect.height
-        currentCircle = Circle(centre: CGPoint(x:screenSize.width/2,y:screenSize.height/2), radius: CGFloat(screenSize.width/4))
-        
-        // set the text color to dark gray
-        let fieldColor: UIColor = UIColor.darkGray
-        // set the font to Helvetica Neue 18
-        let fieldFont = UIFont(name: "Helvetica Neue", size: 18)
-        // set the line spacing to 6
-        let paraStyle = NSMutableParagraphStyle()
+        currentCircle = Circle(centre: CGPoint(x:screenSize.width/2,y:screenSize.height/2), radius: CGFloat(screenSize.width/9))
         paraStyle.lineSpacing = CGFloat(6.0)
-        // set the Obliqueness to 0.1
-        let skew = 0.2
-        let attributes: NSDictionary = [
-            NSAttributedString.Key.foregroundColor: fieldColor,
-            NSAttributedString.Key.paragraphStyle: paraStyle,
-            NSAttributedString.Key.obliqueness: skew,
-            NSAttributedString.Key.font: fieldFont!
-        ]
-        s.draw(in: CGRect(x: 20.0, y: 140.0, width: 300.0, height: 48.0), withAttributes: attributes as? [NSAttributedString.Key : Any])
-        
+
         initialized = true
     }
     
     
     override func draw(_ rect:CGRect) {
         if !initialized {initialize(rect: rect)}
+        if !timerIsRunning {runTimer()}
         //draw the finished lines
         finishedLineColor.setStroke() //finished lines in black
         for line in finishedLines{
@@ -123,10 +138,21 @@ class DrawView: UIView {
             currentLineColor.setStroke(); //current line in red
             strokeLine(line: line);
         }
-        if let curCircleEntity = currentCircle {
-            currentCircleColor.setStroke(); //current line in red
-            strokeCircle(circle: curCircleEntity)
+
+        if currentCircle.radius > CGFloat(screenSize.width/4) {
+            currentCircle.radius = CGFloat(10)
         }
+        currentCircleColor.setStroke(); //current line in red
+        strokeCircle(circle: currentCircle)
+
+        let attributes: NSDictionary = [
+            NSAttributedString.Key.foregroundColor: fieldColor,
+            NSAttributedString.Key.paragraphStyle: paraStyle,
+            NSAttributedString.Key.obliqueness: skew,
+            NSAttributedString.Key.font: fieldFont!
+        ]
+        s =  "Ball radius: \(self.currentCircle.radius.format(f: "6.2")).\n" as NSString
+        s.draw(in: CGRect(x: 20.0, y: 140.0, width: 300.0, height: 48.0), withAttributes: attributes as? [NSAttributedString.Key : Any])
     }
     
     //Override Touch Functions
@@ -197,6 +223,10 @@ public extension Double {
 // MARK: CGFloat Extension
 
 public extension CGFloat {
+    
+    func format(f: String) -> String {
+        return String(format: "%\(f)f", self)
+    }
     /// Randomly returns either 1.0 or -1.0.
     public static var randomSign: CGFloat {
         return (arc4random_uniform(2) == 0) ? 1.0 : -1.0
