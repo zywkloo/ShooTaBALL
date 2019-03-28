@@ -15,6 +15,10 @@
 		C5410F48224A8479005CC5D4 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5410F47224A8478005CC5D4 /* Line.swift */; };
 		C5410F4A224A84F1005CC5D4 /* DrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5410F49224A84F1005CC5D4 /* DrawView.swift */; };
 		C5410F4C224B35A9005CC5D4 /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5410F4B224B35A9005CC5D4 /* Circle.swift */; };
+		C5410F7F224CA8B9005CC5D4 /* Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5410F7B224CA8B9005CC5D4 /* Controller.swift */; };
+		C5410F80224CA8B9005CC5D4 /* stringHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5410F7C224CA8B9005CC5D4 /* stringHandler.swift */; };
+		C5410F81224CA8B9005CC5D4 /* ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5410F7D224CA8B9005CC5D4 /* ball.swift */; };
+		C5410F82224CA8B9005CC5D4 /* Projectile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5410F7E224CA8B9005CC5D4 /* Projectile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +32,10 @@
 		C5410F47224A8478005CC5D4 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		C5410F49224A84F1005CC5D4 /* DrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawView.swift; sourceTree = "<group>"; };
 		C5410F4B224B35A9005CC5D4 /* Circle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Circle.swift; sourceTree = "<group>"; };
+		C5410F7B224CA8B9005CC5D4 /* Controller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Controller.swift; sourceTree = "<group>"; };
+		C5410F7C224CA8B9005CC5D4 /* stringHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = stringHandler.swift; sourceTree = "<group>"; };
+		C5410F7D224CA8B9005CC5D4 /* ball.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ball.swift; sourceTree = "<group>"; };
+		C5410F7E224CA8B9005CC5D4 /* Projectile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Projectile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +68,10 @@
 		C5410F34224A843F005CC5D4 /* Touch */ = {
 			isa = PBXGroup;
 			children = (
+				C5410F7D224CA8B9005CC5D4 /* ball.swift */,
+				C5410F7B224CA8B9005CC5D4 /* Controller.swift */,
+				C5410F7E224CA8B9005CC5D4 /* Projectile.swift */,
+				C5410F7C224CA8B9005CC5D4 /* stringHandler.swift */,
 				C5410F35224A843F005CC5D4 /* AppDelegate.swift */,
 				C5410F37224A843F005CC5D4 /* ViewController.swift */,
 				C5410F39224A843F005CC5D4 /* Main.storyboard */,
@@ -144,9 +156,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5410F81224CA8B9005CC5D4 /* ball.swift in Sources */,
 				C5410F4C224B35A9005CC5D4 /* Circle.swift in Sources */,
+				C5410F80224CA8B9005CC5D4 /* stringHandler.swift in Sources */,
 				C5410F48224A8479005CC5D4 /* Line.swift in Sources */,
 				C5410F38224A843F005CC5D4 /* ViewController.swift in Sources */,
+				C5410F7F224CA8B9005CC5D4 /* Controller.swift in Sources */,
+				C5410F82224CA8B9005CC5D4 /* Projectile.swift in Sources */,
 				C5410F4A224A84F1005CC5D4 /* DrawView.swift in Sources */,
 				C5410F36224A843F005CC5D4 /* AppDelegate.swift in Sources */,
 			);
