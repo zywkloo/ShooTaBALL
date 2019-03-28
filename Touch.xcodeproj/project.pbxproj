@@ -12,6 +12,9 @@
 		C5410F3B224A843F005CC5D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5410F39224A843F005CC5D4 /* Main.storyboard */; };
 		C5410F3D224A8441005CC5D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5410F3C224A8441005CC5D4 /* Assets.xcassets */; };
 		C5410F40224A8441005CC5D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5410F3E224A8441005CC5D4 /* LaunchScreen.storyboard */; };
+		C5410F48224A8479005CC5D4 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5410F47224A8478005CC5D4 /* Line.swift */; };
+		C5410F4A224A84F1005CC5D4 /* DrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5410F49224A84F1005CC5D4 /* DrawView.swift */; };
+		C5410F4C224B35A9005CC5D4 /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5410F4B224B35A9005CC5D4 /* Circle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +25,9 @@
 		C5410F3C224A8441005CC5D4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C5410F3F224A8441005CC5D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C5410F41224A8441005CC5D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C5410F47224A8478005CC5D4 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
+		C5410F49224A84F1005CC5D4 /* DrawView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawView.swift; sourceTree = "<group>"; };
+		C5410F4B224B35A9005CC5D4 /* Circle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Circle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +66,9 @@
 				C5410F3C224A8441005CC5D4 /* Assets.xcassets */,
 				C5410F3E224A8441005CC5D4 /* LaunchScreen.storyboard */,
 				C5410F41224A8441005CC5D4 /* Info.plist */,
+				C5410F47224A8478005CC5D4 /* Line.swift */,
+				C5410F49224A84F1005CC5D4 /* DrawView.swift */,
+				C5410F4B224B35A9005CC5D4 /* Circle.swift */,
 			);
 			path = Touch;
 			sourceTree = "<group>";
@@ -135,7 +144,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5410F4C224B35A9005CC5D4 /* Circle.swift in Sources */,
+				C5410F48224A8479005CC5D4 /* Line.swift in Sources */,
 				C5410F38224A843F005CC5D4 /* ViewController.swift in Sources */,
+				C5410F4A224A84F1005CC5D4 /* DrawView.swift in Sources */,
 				C5410F36224A843F005CC5D4 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
