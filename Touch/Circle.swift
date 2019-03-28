@@ -22,4 +22,8 @@ struct Circle {
     func containsPoint(point:CGPoint) -> Bool {
         return distanceToPoint(point: point) <= radius
     }
+    mutating func advanceInArea(area: CGRect){
+        //...
+    }
+    
 }

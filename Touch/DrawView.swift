@@ -19,6 +19,8 @@ class DrawView: UIView {
     var timer :Timer!
     var timerIsRunning = false
     let screenSize: CGRect = UIScreen.main.bounds
+    var distX:CGFloat?
+    var distY:CGFloat?
     
     var s: NSString = NSString()
     // set the text color to dark gray
@@ -112,7 +114,7 @@ class DrawView: UIView {
         //rect.width and rect.height
         currentCircle = Circle(centre: CGPoint(x:screenSize.width/2,y:screenSize.height/2), radius: CGFloat(screenSize.width/9))
         paraStyle.lineSpacing = CGFloat(6.0)
-        ballCircle = Circle(centre: CGPoint(x:50,y:100), radius:CGFloat(20.0))
+        ballCircle = Circle(centre: CGPoint(x:50,y:100), radius:CGFloat(40.0))
         initialized = true
     }
     
@@ -138,7 +140,6 @@ class DrawView: UIView {
             currentLineColor.setStroke(); //current line in 
             strokeLine(line: line);
         }
-
         if currentCircle.radius > CGFloat(screenSize.width/4) {
             currentCircle.radius = CGFloat(10)
         }
@@ -162,10 +163,14 @@ class DrawView: UIView {
         let location = touch.location(in: self); //get location in view co-ordinate
         if currentCircle.containsPoint(point: location) {
             print("You hit the currrent circle.")
+            distX = location.x-currentCircle.centre.x
+            distY = location.y-currentCircle.centre.y
             currentCircleColor = UIColor.blue
         }
         if ballCircle.containsPoint(point: location) {
             print("You hit the ball circle.")
+            distX = location.x-ballCircle.centre.x
+            distY = location.y-ballCircle.centre.y
             currentCircleColor = UIColor.green
         }
         currentLine = Line(begin: location, end: location);
@@ -177,17 +182,17 @@ class DrawView: UIView {
         let touch = touches.first!; //get first touch event and unwrap optional
         let location = touch.location(in: self); //get location in view co-ordinate
         currentLine?.end = location;
-        guard let line = currentLine else{
+        guard let deltaX = distX, let deltaY = distY else{
+            setNeedsDisplay()
             return
         }
-        
         if  currentCircle.containsPoint(point: location)  {
-            currentCircle.centre.x = location.x - line.begin.x
-            currentCircle.centre.y = location.y - line.begin.y 
+            //currentCircle.centre.x = location.x - deltaX
+            //currentCircle.centre.y = location.y - deltaY
         }
         if  ballCircle.containsPoint(point: location)  {
-            ballCircle.centre.x = line.begin.x + location.x
-            ballCircle.centre.y = line.begin.y + location.y
+            ballCircle.centre.x =  location.x - deltaX
+            ballCircle.centre.y =  location.y - deltaY
         }
         setNeedsDisplay(); //this view needs to be updated
     }
@@ -197,15 +202,18 @@ class DrawView: UIView {
         let touch = touches.first!; //get first touch event and unwrap optional
         let location = touch.location(in: self); //get location in view co-ordinate
         //currentCircleColor = UIColor.purple
+        
         currentLine?.end = location;
         strokeLine(line: currentLine!);
         finishedLines.append(currentLine!);
+        distX = nil ; distY = nil
         setNeedsDisplay(); //this view needs to be updated
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>?, with event: UIEvent?) {
         print(#function) //for debugging
         currentLine = nil;
+        distX = nil ; distY = nil
     }
 }
 
