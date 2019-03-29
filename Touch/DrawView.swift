@@ -21,6 +21,9 @@ class DrawView: UIView {
     let screenSize: CGRect = UIScreen.main.bounds
     var distX:CGFloat?
     var distY:CGFloat?
+    var targetCircle:Circle?
+    var readyToShoot:Bool = false
+    
     
     var s: NSString = NSString()
     // set the text color to dark gray
@@ -32,13 +35,14 @@ class DrawView: UIView {
 
     // set the Obliqueness to 0.1
     let skew = 0.2
-
     
     var count = 0
     @objc func updateTimer(){
         count = (count + 1) % 1000 //one event per 100 msec
         if count != 0 {return}
         currentCircle.radius += CGFloat(1.0)
+        ballCircle.radius += CGFloat(0.1)
+        ballCircle.advanceInArea(area:screenSize)
         setNeedsDisplay();
     }
     
@@ -103,7 +107,6 @@ class DrawView: UIView {
         let path = UIBezierPath();
         path.lineWidth = lineThickness;
         path.lineCapStyle = CGLineCap.round;
-        
         path.move(to: line.begin);
         path.addLine(to: line.end);
         path.stroke(); //actually draw the path
@@ -114,11 +117,9 @@ class DrawView: UIView {
         //rect.width and rect.height
         currentCircle = Circle(centre: CGPoint(x:screenSize.width/2,y:screenSize.height/2), radius: CGFloat(screenSize.width/9))
         paraStyle.lineSpacing = CGFloat(6.0)
-        ballCircle = Circle(centre: CGPoint(x:50,y:100), radius:CGFloat(40.0))
+        ballCircle = Circle(centre: CGPoint(x:50,y:100), radius:CGFloat(screenSize.width/9))
         initialized = true
     }
-    
-    
     override func draw(_ rect:CGRect) {
         if !initialized {initialize(rect: rect)}
         if !timerIsRunning {runTimer()}
@@ -143,6 +144,9 @@ class DrawView: UIView {
         if currentCircle.radius > CGFloat(screenSize.width/4) {
             currentCircle.radius = CGFloat(10)
         }
+        if ballCircle.radius > CGFloat(screenSize.width/6) {
+            ballCircle.radius = CGFloat(screenSize.width/9)
+        }
         currentCircleColor.setStroke(); //current line in
         strokeCircle(circle: currentCircle)
 
@@ -166,12 +170,15 @@ class DrawView: UIView {
             distX = location.x-currentCircle.centre.x
             distY = location.y-currentCircle.centre.y
             currentCircleColor = UIColor.blue
+            targetCircle = currentCircle
         }
         if ballCircle.containsPoint(point: location) {
             print("You hit the ball circle.")
             distX = location.x-ballCircle.centre.x
             distY = location.y-ballCircle.centre.y
             currentCircleColor = UIColor.green
+            targetCircle = ballCircle
+            readyToShoot = true
         }
         currentLine = Line(begin: location, end: location);
         setNeedsDisplay(); //this view needs to be updated
@@ -183,17 +190,16 @@ class DrawView: UIView {
         let location = touch.location(in: self); //get location in view co-ordinate
         currentLine?.end = location;
         guard let deltaX = distX, let deltaY = distY else{
-            setNeedsDisplay()
             return
         }
         if  currentCircle.containsPoint(point: location)  {
-            //currentCircle.centre.x = location.x - deltaX
-            //currentCircle.centre.y = location.y - deltaY
+            currentCircle.centre.x = location.x - deltaX
+            currentCircle.centre.y = location.y - deltaY
         }
-        if  ballCircle.containsPoint(point: location)  {
-            ballCircle.centre.x =  location.x - deltaX
-            ballCircle.centre.y =  location.y - deltaY
-        }
+//        if  ballCircle.containsPoint(point: location)  {
+//            ballCircle.centre.x =  location.x - deltaX
+//            ballCircle.centre.y =  location.y - deltaY
+//        }
         setNeedsDisplay(); //this view needs to be updated
     }
     
@@ -201,9 +207,22 @@ class DrawView: UIView {
         print(#function) //for debugging
         let touch = touches.first!; //get first touch event and unwrap optional
         let location = touch.location(in: self); //get location in view co-ordinate
-        //currentCircleColor = UIColor.purple
-        
+//        currentCircleColor = UIColor.purple
+//        guard let deltaX = distX, let deltaY = distY else{
+//            setNeedsDisplay()
+//            return
+//        }
         currentLine?.end = location;
+        guard let shootLine=self.currentLine else {
+            print("No currentLine")
+            return
+        }
+        if readyToShoot {
+            ballCircle.EVx = (shootLine.begin.x - shootLine.end.x)
+            ballCircle.EVy = (shootLine.begin.y - shootLine.end.y)
+            print ("init Vx:\(ballCircle.EVx) Vy:\(ballCircle.EVy) \n")
+            readyToShoot = false
+        }
         strokeLine(line: currentLine!);
         finishedLines.append(currentLine!);
         distX = nil ; distY = nil
@@ -214,6 +233,7 @@ class DrawView: UIView {
         print(#function) //for debugging
         currentLine = nil;
         distX = nil ; distY = nil
+        readyToShoot = false
     }
 }
 
