@@ -10,7 +10,25 @@
 import Foundation
 import CoreGraphics
 
-struct Line {
+class Line {
     var begin = CGPoint.zero
-    var end = CGPoint.zero
+    var len:CGFloat = 0
+    @IBInspectable var end = CGPoint.zero{
+        didSet {
+            self.len = distance(self.begin, self.end)
+        }
+    }
+    init () {}
+    init(begin b: CGPoint, end e:CGPoint){
+        self.begin = b
+        self.end = e
+        self.len = distance(begin, end)
+    }
+    
+    func distance(_ a: CGPoint, _ b: CGPoint) -> CGFloat {
+        let xDist = a.x - b.x
+        let yDist = a.y - b.y
+        return CGFloat(sqrt(xDist * xDist + yDist * yDist))
+    }
+
 }
