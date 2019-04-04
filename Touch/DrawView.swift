@@ -14,6 +14,9 @@ class DrawView: UIView {
     var ballCircle: Circle = Circle();
     var finishedCircle = [Circle]()
     var finishedLines = [Line]()
+    var graphLines = [Line]()
+    let blueLineColor: UIColor = UIColor.blue
+    let grayLineColor: UIColor = UIColor.gray
     var initialized = false //variables not yet initialized
     var timer :Timer!
     var timerIsRunning = false
@@ -112,8 +115,21 @@ class DrawView: UIView {
 
     func initialize(rect: CGRect){
 
-        paraStyle.lineSpacing = CGFloat(6.0)
+        paraStyle.lineSpacing = CGFloat(4.0)
         ballCircle = Circle(centre: CGPoint(x:50,y:100), radius:CGFloat(screenSize.width/9))
+        blueLineColor.setStroke() //blue graph lines
+        grayLineColor.setStroke() //gray graph lines
+        var widthItr:Int = 0
+        while ( widthItr <= Int(screenSize.width) ){
+            if ( widthItr%100 == 0){
+                
+            }
+            widthItr += 20
+        }
+
+        for line in graphLines{
+            strokeLine(line: line);
+        }
         initialized = true
     }
     override func draw(_ rect:CGRect) {
@@ -124,14 +140,13 @@ class DrawView: UIView {
         for line in finishedLines{
             strokeLine(line: line);
         }
-        //for debug
-        //couple of lines and circles for debug
         
         let line1 = Line(begin: CGPoint(x:50,y:50), end: CGPoint(x:100,y:100));
         let line2 = Line(begin: CGPoint(x:50,y:100), end: CGPoint(x:100,y:300));
         
         strokeLine(line: line1);
         strokeLine(line: line2);
+        
         strokeCircle(circle: ballCircle);
         //draw current line if it exists
         if let line = currentLine {
@@ -198,7 +213,6 @@ class DrawView: UIView {
             readyToShoot = false
         }
         strokeLine(line: currentLine!);
-        finishedLines.append(currentLine!);
         distX = nil ; distY = nil
         setNeedsDisplay(); //this view needs to be updated
     }
