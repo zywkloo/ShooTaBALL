@@ -51,24 +51,16 @@ class Circle {
             self.EVy = -self.EVy
         }
       
-        if pow(EVx,2)+pow(EVy,2) < 0.5*pow(2,0.5) {
+        if pow(EVx,2)+pow(EVy,2) < pow(2,0.5) {
             self.EVx = 0
             self.EVy = 0
             return
-        } else {
-           
-        }
-        if self.EVx < -0.5 {
-            self.Ax = 0.5
-        } else if self.EVx > 0.5 {
-            self.Ax = -0.5
         }
         
-        if self.EVy < -0.5 {
-            self.Ay = 0.5
-        } else if self.EVy > 0.5 {
-            self.Ay = -0.5
-        }
+        let acc:CGFloat = 0.26
+        self.Ax = (EVx>0 ? -acc:acc) * abs(cos( atan( EVy/EVx)))
+        self.Ay =  (EVy>0 ? -acc:acc) * abs(sin( atan( EVy/EVx)))
+
         let delta:CGFloat = 1
         self.EVx += self.Ax
         self.EVy += self.Ay
